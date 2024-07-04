@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package summary.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "btceden/api/summary/v1;v1";
+
+// The greeting service definition.
+service Summary {
+  // Sends a greeting
+  rpc Aggregate (AggregateRequest) returns (AggregateReply) {
+    option (google.api.http) = {
+      get: "/aggregate"
+    };
+  }
+}
+
+// The request message containing the user's name.
+message AggregateRequest {
+  string chains = 1;
+}
+
+// The response message containing the greetings
+message AggregateReply {
+  map<string, Statistics> statistics = 1 [json_name = "statistics"];;
+}
+
+message Statistics {
+  string tvl = 1;
+  string tps = 2;
+  string gas = 3;
+}

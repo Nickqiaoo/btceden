@@ -1,0 +1,30 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "btceden/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+message Bootstrap {
+  Server server = 1;
+  Data data = 2;
+}
+
+message Server {
+  message HTTP {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  HTTP http = 1;
+}
+
+message Data {
+  string defi_llama_api = 1;
+  repeated Chain chains = 2;
+}
+
+message Chain {
+  string name = 1;
+  string rpc = 2;
+}

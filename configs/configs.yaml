@@ -1,0 +1,21 @@
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+data:
+  defi_llama_api: https://api.llama.fi/v2/chains
+  chains:
+    - name: optimism
+      rpc: https://rpc.ankr.com/optimism
+    - name: merlin
+      rpc: https://rpc.merlinchain.io
+    - name: bitlayer
+      rpc: https://rpc.bitlayer.org
+    - name: rootstock
+      rpc: https://rpc.mainnet.rootstock.io/rnRc6lzHt5Op8w6GHgJ9A1JXKy0fgc-M
+    - name: bevm
+      rpc: https://rpc-mainnet-1.bevm.io
+    - name: bob
+      rpc: https://bob-mainnet.public.blastapi.io
+    - name: bsquared
+      rpc: https://rpc.bsquared.network
