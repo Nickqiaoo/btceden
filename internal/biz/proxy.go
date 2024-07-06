@@ -26,9 +26,17 @@ func NewProxyUsecase(c *conf.Data, proxyRepo ProxyRepo, logger log.Logger) *Prox
 	return s
 }
 
-func (uc *ProxyUsecase) TVL(ctx context.Context) (res map[string]interface{}, err error) {
+func (uc *ProxyUsecase) TVL(ctx context.Context, project string) (res map[string]interface{}, err error) {
 	if value, ok := uc.data.Load("tvl"); ok {
 		res = value.(map[string]interface{})
+	}
+	if project == "" {
+		return
+	}
+	if projects, exists := res["projects"].(map[string]interface{}); exists {
+		if p, exist := projects[project].(map[string]interface{}); exist {
+			return p, nil
+		}
 	}
 	return
 }

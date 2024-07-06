@@ -21,8 +21,8 @@ func NewProxyService(c *conf.Data, proxy *biz.ProxyUsecase, logger log.Logger) *
 	}
 }
 
-func (s *ProxyService) TVL(ctx context.Context) (res map[string]interface{}, err error) {
-	return s.proxy.TVL(ctx)
+func (s *ProxyService) TVL(ctx context.Context, project string) (res map[string]interface{}, err error) {
+	return s.proxy.TVL(ctx, project)
 }
 func (s *ProxyService) Activity(ctx context.Context) (res map[string]interface{}, err error) {
 	return s.proxy.Activity(ctx)

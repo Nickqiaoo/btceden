@@ -8,7 +8,8 @@ import (
 var proxyService *service.ProxyService
 
 func tvl(ctx http.Context) error {
-	res, err := proxyService.TVL(ctx)
+	project := ctx.Query().Get("project")
+	res, err := proxyService.TVL(ctx, project)
 	if err != nil {
 		return err
 	}
