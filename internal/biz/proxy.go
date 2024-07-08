@@ -4,6 +4,7 @@ import (
 	"btceden/internal/conf"
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/mohae/deepcopy"
 	"github.com/robfig/cron/v3"
 	"sync"
 )
@@ -35,11 +36,8 @@ func NewProxyUsecase(c *conf.Data, proxyRepo ProxyRepo, logger log.Logger) *Prox
 }
 
 func (uc *ProxyUsecase) TVL(ctx context.Context, chainid string) (res map[string]interface{}, err error) {
-	if value, ok := uc.data.Load("tvl"); ok {
+	if value, ok := uc.data.Load("tvl-project"); ok {
 		res = value.(map[string]interface{})
-	}
-	if chainid == "" {
-		return
 	}
 	var (
 		project string
@@ -52,6 +50,13 @@ func (uc *ProxyUsecase) TVL(ctx context.Context, chainid string) (res map[string
 		if p, exist := projects[project].(map[string]interface{}); exist {
 			return p, nil
 		}
+	}
+	return
+}
+
+func (uc *ProxyUsecase) Layer2sTVL(ctx context.Context) (res map[string]interface{}) {
+	if value, ok := uc.data.Load("tvl-layer2s"); ok {
+		res = value.(map[string]interface{})
 	}
 	return
 }
@@ -89,7 +94,19 @@ func (uc *ProxyUsecase) getTVL() {
 		uc.log.WithContext(ctx).Errorf("ProxyUsecase getTVL err: %v", err)
 		return
 	}
-	uc.data.Store("tvl", res)
+	copied := deepcopy.Copy(res).(map[string]interface{})
+	delete(copied, "layers2s")
+	uc.data.Store("tvl-project", copied)
+
+	if projects, exists := res["projects"].(map[string]interface{}); exists {
+		for _, chain := range projects {
+			if c, isc := chain.(map[string]interface{}); isc {
+				delete(c, "charts")
+			}
+		}
+
+	}
+	uc.data.Store("tvl-layer2s", res)
 	return
 }
 

@@ -22,6 +22,9 @@ func NewProxyService(c *conf.Data, proxy *biz.ProxyUsecase, logger log.Logger) *
 }
 
 func (s *ProxyService) TVL(ctx context.Context, chainid string) (res map[string]interface{}, err error) {
+	if chainid == "" {
+		return s.proxy.Layer2sTVL(ctx), nil
+	}
 	return s.proxy.TVL(ctx, chainid)
 }
 func (s *ProxyService) Activity(ctx context.Context) (res map[string]interface{}, err error) {

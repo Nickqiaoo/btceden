@@ -6,6 +6,7 @@ require (
 	github.com/go-kratos/kratos/v2 v2.7.2
 	github.com/google/wire v0.5.0
 	github.com/gorilla/handlers v1.5.2
+	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826
 	github.com/robfig/cron/v3 v3.0.1
 	go.uber.org/automaxprocs v1.5.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20230629202037-9506855d4529
