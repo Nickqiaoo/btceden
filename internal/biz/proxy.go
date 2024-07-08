@@ -16,6 +16,14 @@ type ProxyUsecase struct {
 	data sync.Map
 }
 
+var chainIdMap = map[string]string{
+	"200901":    "bitlayer",
+	"Merlin":    "4200",
+	"Rootstock": "30",
+	"BEVM":      "11501",
+	"BOB":       "60808",
+}
+
 type ProxyRepo interface {
 	Proxy(context.Context, string) (map[string]interface{}, error)
 }
@@ -26,11 +34,18 @@ func NewProxyUsecase(c *conf.Data, proxyRepo ProxyRepo, logger log.Logger) *Prox
 	return s
 }
 
-func (uc *ProxyUsecase) TVL(ctx context.Context, project string) (res map[string]interface{}, err error) {
+func (uc *ProxyUsecase) TVL(ctx context.Context, chainid string) (res map[string]interface{}, err error) {
 	if value, ok := uc.data.Load("tvl"); ok {
 		res = value.(map[string]interface{})
 	}
-	if project == "" {
+	if chainid == "" {
+		return
+	}
+	var (
+		project string
+		exist   bool
+	)
+	if project, exist = chainIdMap[chainid]; !exist {
 		return
 	}
 	if projects, exists := res["projects"].(map[string]interface{}); exists {
@@ -41,9 +56,21 @@ func (uc *ProxyUsecase) TVL(ctx context.Context, project string) (res map[string
 	return
 }
 
-func (uc *ProxyUsecase) TVLBreakDown(ctx context.Context) (res map[string]interface{}, err error) {
+func (uc *ProxyUsecase) TVLBreakDown(ctx context.Context, chainid string) (res map[string]interface{}, err error) {
 	if value, ok := uc.data.Load("tvl-breakdown"); ok {
 		res = value.(map[string]interface{})
+	}
+	var (
+		project string
+		exist   bool
+	)
+	if project, exist = chainIdMap[chainid]; !exist {
+		return
+	}
+	if projects, exists := res["breakdowns"].(map[string]interface{}); exists {
+		if p, exist := projects[project].(map[string]interface{}); exist {
+			return p, nil
+		}
 	}
 	return
 }

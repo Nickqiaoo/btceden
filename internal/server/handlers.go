@@ -8,8 +8,8 @@ import (
 var proxyService *service.ProxyService
 
 func tvl(ctx http.Context) error {
-	project := ctx.Query().Get("project")
-	res, err := proxyService.TVL(ctx, project)
+	chainid := ctx.Query().Get("chainid")
+	res, err := proxyService.TVL(ctx, chainid)
 	if err != nil {
 		return err
 	}
@@ -26,7 +26,8 @@ func tvl(ctx http.Context) error {
 }
 
 func breakdown(ctx http.Context) error {
-	res, err := proxyService.TVLBreakDown(ctx)
+	chainid := ctx.Query().Get("chainid")
+	res, err := proxyService.TVLBreakDown(ctx, chainid)
 	if err != nil {
 		return err
 	}
