@@ -17,11 +17,11 @@ type ProxyUsecase struct {
 }
 
 var chainIdMap = map[string]string{
-	"200901":    "bitlayer",
-	"Merlin":    "4200",
-	"Rootstock": "30",
-	"BEVM":      "11501",
-	"BOB":       "60808",
+	"200901": "bitlayer",
+	"4200":   "Merlin",
+	"30":     "Rootstock",
+	"11501":  "BEVM",
+	"60808":  "BOB",
 }
 
 type ProxyRepo interface {
