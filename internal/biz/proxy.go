@@ -72,7 +72,29 @@ func (uc *ProxyUsecase) TVLBreakDown(ctx context.Context, chainid string) (res m
 	if project, exist = chainIdMap[chainid]; !exist {
 		return
 	}
+	timestamp := res["dataTimestamp"]
 	if projects, exists := res["breakdowns"].(map[string]interface{}); exists {
+		if p, exist := projects[project].(map[string]interface{}); exist {
+			p["dataTimestamp"] = timestamp
+			return p, nil
+		}
+	}
+	return
+}
+
+func (uc *ProxyUsecase) Activity(ctx context.Context, chainid string) (res map[string]interface{}, err error) {
+	if value, ok := uc.data.Load("activity-project"); ok {
+		res = value.(map[string]interface{})
+	}
+
+	var (
+		project string
+		exist   bool
+	)
+	if project, exist = chainIdMap[chainid]; !exist {
+		return
+	}
+	if projects, exists := res["projects"].(map[string]interface{}); exists {
 		if p, exist := projects[project].(map[string]interface{}); exist {
 			return p, nil
 		}
@@ -80,8 +102,8 @@ func (uc *ProxyUsecase) TVLBreakDown(ctx context.Context, chainid string) (res m
 	return
 }
 
-func (uc *ProxyUsecase) Activity(ctx context.Context) (res map[string]interface{}, err error) {
-	if value, ok := uc.data.Load("activity"); ok {
+func (uc *ProxyUsecase) Layer2sActivity(ctx context.Context) (res map[string]interface{}) {
+	if value, ok := uc.data.Load("activity-layer2s"); ok {
 		res = value.(map[string]interface{})
 	}
 	return
@@ -128,7 +150,19 @@ func (uc *ProxyUsecase) getActivity() {
 		uc.log.WithContext(ctx).Errorf("ProxyUsecase getActivity err: %v", err)
 		return
 	}
-	uc.data.Store("activity", res)
+	copied := deepcopy.Copy(res).(map[string]interface{})
+	delete(copied, "combined")
+	uc.data.Store("activity-project", copied)
+
+	if projects, exists := res["projects"].(map[string]interface{}); exists {
+		for _, chain := range projects {
+			if c, isc := chain.(map[string]interface{}); isc {
+				delete(c, "daily")
+			}
+		}
+
+	}
+	uc.data.Store("activity-layer2s", res)
 	return
 }
 

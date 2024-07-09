@@ -27,8 +27,11 @@ func (s *ProxyService) TVL(ctx context.Context, chainid string) (res map[string]
 	}
 	return s.proxy.TVL(ctx, chainid)
 }
-func (s *ProxyService) Activity(ctx context.Context) (res map[string]interface{}, err error) {
-	return s.proxy.Activity(ctx)
+func (s *ProxyService) Activity(ctx context.Context, chainid string) (res map[string]interface{}, err error) {
+	if chainid == "" {
+		return s.proxy.Layer2sActivity(ctx), nil
+	}
+	return s.proxy.Activity(ctx, chainid)
 }
 func (s *ProxyService) TVLBreakDown(ctx context.Context, chainid string) (res map[string]interface{}, err error) {
 	return s.proxy.TVLBreakDown(ctx, chainid)

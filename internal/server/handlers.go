@@ -43,7 +43,8 @@ func breakdown(ctx http.Context) error {
 }
 
 func activity(ctx http.Context) error {
-	res, err := proxyService.Activity(ctx)
+	chainid := ctx.Query().Get("chainid")
+	res, err := proxyService.Activity(ctx, chainid)
 	if err != nil {
 		return err
 	}
