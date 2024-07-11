@@ -23,6 +23,7 @@ var chainIdMap = map[string]string{
 	"30":     "rootstock",
 	"11501":  "bevm",
 	"60808":  "bob",
+	"223":    "bsquared",
 }
 
 type ProxyRepo interface {
