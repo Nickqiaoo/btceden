@@ -18,12 +18,23 @@ type ProxyUsecase struct {
 }
 
 var chainIdMap = map[string]string{
-	"200901": "bitlayer",
-	"4200":   "merlin",
-	"30":     "rootstock",
-	"11501":  "bevm",
-	"60808":  "bob",
-	"223":    "bsquared",
+	"200901":   "bitlayer",
+	"4200":     "merlin",
+	"30":       "rootstock",
+	"11501":    "bevm",
+	"60808":    "bob",
+	"223":      "bsquared",
+	"10100001": "stacks",
+	"10100002": "liquid",
+	"3109":     "satoshivm",
+	"57":       "syscoin",
+	"10100003": "ckbtc",
+	"10100004": "libre",
+	"1456":     "zkbase",
+	"10100005": "ark",
+	"1116":     "core",
+	"6001":     "bouncebit",
+	"2649":     "ailayer",
 }
 
 type ProxyRepo interface {
