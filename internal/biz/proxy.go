@@ -35,6 +35,7 @@ var chainIdMap = map[string]string{
 	"1116":     "core",
 	"6001":     "bouncebit",
 	"2649":     "ailayer",
+	"10100006": "lightning",
 }
 
 type ProxyRepo interface {
