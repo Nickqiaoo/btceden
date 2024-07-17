@@ -6,19 +6,26 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"os"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type proxyRepo struct {
-	data *Data
-	log  *log.Helper
+	data   *Data
+	log    *log.Helper
+	apiUrl string
 }
 
 func NewProxyRepo(data *Data, logger log.Logger) biz.ProxyRepo {
+	api := os.Getenv("L2BEAT_API_URL")
+	if api == "" {
+		api = "http://localhost:3000"
+	}
 	return &proxyRepo{
-		data: data,
-		log:  log.NewHelper(logger),
+		data:   data,
+		log:    log.NewHelper(logger),
+		apiUrl: api,
 	}
 }
 
@@ -28,7 +35,7 @@ func (r *proxyRepo) Proxy(ctx context.Context, api string) (res map[string]inter
 		resp *http.Response
 	)
 
-	if req, err = http.NewRequest("GET", "http://localhost:3000"+api, nil); err != nil {
+	if req, err = http.NewRequest("GET", r.apiUrl+api, nil); err != nil {
 		r.log.Errorf("proxyRepo http.NewRequest.error(%v)", err)
 		return
 	}
