@@ -4,6 +4,8 @@ import (
 	"btceden/internal/biz"
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -56,7 +58,7 @@ func (r *proxyRepo) Proxy(ctx context.Context, api string) (res map[string]inter
 	}
 	if res == nil {
 		r.log.Warnf("proxyRepo res(%+v)", res)
-		return
+		return nil, errors.New(fmt.Sprintf("proxyRepo api(%s) res nil", api))
 	}
 	return
 }

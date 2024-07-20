@@ -2,10 +2,13 @@ package main
 
 import (
 	"flag"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"os"
 
 	"btceden/internal/conf"
 
+	kratoszap "github.com/go-kratos/kratos/contrib/log/zap/v2"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
@@ -47,7 +50,14 @@ func newApp(logger log.Logger, hs *http.Server) *kratos.App {
 
 func main() {
 	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
+	writeSyncer := zapcore.AddSync(os.Stdout)
+
+	encoder := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+	core := zapcore.NewCore(encoder, writeSyncer, zapcore.DebugLevel)
+	z := zap.New(core)
+
+	zapLogger := kratoszap.NewLogger(z)
+	logger := log.With(zapLogger,
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", id,
