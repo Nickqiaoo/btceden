@@ -186,8 +186,8 @@ func (uc *ProxyUsecase) Load(ctx context.Context) {
 	uc.getTVLBreakDown()
 	uc.getActivity()
 
-	c.AddFunc("@every 1h", uc.getTVL)
-	c.AddFunc("@every 1h", uc.getTVLBreakDown)
+	c.AddFunc("10 * * * *", uc.getTVL)
+	c.AddFunc("10 * * * *", uc.getTVLBreakDown)
 	c.AddFunc("@every 1h", uc.getActivity)
 
 	c.Start()
